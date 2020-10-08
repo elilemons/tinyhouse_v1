@@ -16,7 +16,7 @@ const mount = async (app: Application) => {
   app.listen(process.env.PORT);
 
   // eslint-disable-next-line no-console
-  console.log(`[app] : http://localhost:${port}`);
+  console.log(`[app] : http://localhost:${process.env.PORT}`);
 };
 
 mount(express());
