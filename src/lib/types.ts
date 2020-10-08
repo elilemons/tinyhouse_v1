@@ -10,6 +10,7 @@ export interface Listing {
   numOfBeds: number;
   numOfBaths: number;
   rating: number;
+  favorite: boolean;
 }
 
 export interface Database {

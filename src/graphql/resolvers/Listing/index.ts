@@ -13,6 +13,14 @@ export const listingResolvers: IResolvers = {
     ): Promise<Listing[]> => {
       return await db.listings.find({}).toArray();
     },
+    favorites: async (
+      _root: undefined,
+      // eslint-disable-next-line @typescript-eslint/ban-types
+      _args: {},
+      { db }: { db: Database }
+    ): Promise<Listing[]> => {
+      return await db.listings.find({ favorite: true }).toArray();
+    }
   },
   Mutation: {
     deleteListing: async (
@@ -29,6 +37,39 @@ export const listingResolvers: IResolvers = {
       }
 
       return deleteResult.value;
+    },
+    favoriteListing: async (
+      _root: undefined,
+      { id }: { id: string },
+      { db }: { db: Database }
+    ): Promise<number> => {
+      const favoriteResult = await db.listings.updateOne(
+        { _id: new ObjectId(id) },
+        { $set: { favorite: true }}
+      );
+
+      if (!favoriteResult.result.ok) {
+        throw new Error('Favoriting failed');
+      }
+      console.log('Favoriting succeeded', { favoriteResult });
+
+      return favoriteResult.result.ok;
+    },
+
+    unfavoriteListing: async (
+      _root: undefined,
+      { id }: { id: string },
+      { db }: { db: Database }
+    ): Promise<Listing> => {
+      const unfavoriteResult = await db.listings.findOneAndUpdate(
+        { id: id },
+        { $set: { favorite: false } }
+      );
+
+      if (!unfavoriteResult.value) {
+        throw new Error('Favoriting failed');
+      }
+      return unfavoriteResult.value;
     },
   },
   Listing: {

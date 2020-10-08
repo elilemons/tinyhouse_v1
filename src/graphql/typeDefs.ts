@@ -11,13 +11,17 @@ export const typeDefs = gql`
     numOfBeds: Int!
     numOfBaths: Int!
     rating: Int!
+    favorite: Boolean
   }
 
   type Query {
     listings: [Listing!]!
+    favorites: [Listing] # can return null
   }
 
   type Mutation {
     deleteListing(id: ID!): Listing!
+    favoriteListing(id: ID!): Listing!
+    unfavoriteListing(id: ID!): Listing!
   }
 `;
